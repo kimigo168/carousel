@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>轮播图复用模板</title>
+    <link rel="stylesheet" type="text/css" href="css/index1.css">
+</head>
+<body>
+    <!-- 轮播图模块容器 -->
+    <div class="container">
+        <!-- 图片列表 -->
+        <ul class="imgList" style="left:0;">
+        <!--这个地方需要预先把style:left写上去,写CSS里获取不到-->
+            <li><img src="images/1.jpg" alt="1"></li>
+            <li><img src="images/2.jpg" alt="2"></li>
+            <li><img src="images/3.jpg" alt="3"></li>
+            <li><img src="images/4.jpg" alt="4"></li>
+            <li><img src="images/5.jpg" alt="5"></li>
+        </ul>
+        <!-- 圆点列表 -->
+        <ul class="dotList">
+            <li class="on"></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+        <!-- 左右切换按钮 -->
+        <div class="btn">
+            <a href="#" class="prev">&lt;</a>
+            <a href="#" class="next">&gt;</a>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/index1.js"></script>
+    <script type="text/javascript">
+        window.onload = function() {
+            lunBo(800,5);
+        }
+    </script>
+</body>
+</html>
