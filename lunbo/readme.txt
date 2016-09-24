@@ -1,4 +1,4 @@
-﻿index.html是一个实例，而index1.html为一个模板，已经封装成一个插件使用
+﻿index.html是一个实例，而index1.html为一个模板，已经封装成一个插件使用，而index2.html是使用jQuery
 逻辑思路：
 
 1.轮播图的要求：
