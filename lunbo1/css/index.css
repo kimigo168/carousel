@@ -1,0 +1,88 @@
+*{
+    margin:0;
+    padding: 0;
+    list-style-type: none;
+}
+.banner{
+    width: 800px;
+    height: 533px;
+    margin:30px auto;
+    background: green;
+    position: relative;
+    overflow: hidden;/*超出部分隐藏*/
+}
+/* .banner:hover i{
+    display: block;
+} */
+.banner ul{
+    width:4800px;/*总共5张图片，第一张重复，6*800px*/
+    height:533px;
+    position:absolute;
+}
+.banner ul li{
+    width:800px;
+    height:533px;
+    background:url(../images/1.jpg) no-repeat;
+    float: left;
+
+}
+.banner ul li:nth-child(2){
+    background-image: url(../images/2.jpg);
+}
+.banner ul li:nth-child(3){
+    background-image: url(../images/3.jpg);
+}
+.banner ul li:nth-child(4){
+    background-image: url(../images/4.jpg);
+}
+.banner ul li:nth-child(5){
+    background-image: url(../images/5.jpg);
+}
+.banner ol {
+    width:74px;
+    height:10px;
+    position:absolute;
+    left:50%;
+    bottom: 10px;
+    margin-left: -37px;
+}
+.banner ol li{
+    width:10px;
+    height:10px;
+    border-radius: 50%;
+    margin-right: 6px;
+    background:rgba(255,255,255,.7);
+    float: left;
+    cursor: pointer;
+}
+.banner ol li.current{
+    background:rgba(0,0,0,.7);
+}
+.banner ol li:last-child{
+    margin-right: 0;
+}
+/*左右点击按钮*/
+.banner i{
+    display:none;
+    width:60px;
+    height: 60px;
+    position:absolute;
+    top: 50%;
+    margin-top: -30px;
+    background:blue;
+    cursor:pointer;
+}
+.banner i.left{
+    left:10px;
+    background:url(../images/banner-left_fe0df34.png) top no-repeat;
+}
+.banner i.left:hover{
+    background-position: bottom;
+}
+.banner i.right{
+    right:10px;
+    background:url(../images/banner-right_a0bdd7d.png) top no-repeat;
+}
+.banner i.right:hover{
+    background-position: bottom;
+}
