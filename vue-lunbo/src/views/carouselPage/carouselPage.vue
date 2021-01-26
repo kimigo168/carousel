@@ -1,6 +1,6 @@
 <template>
   <div class="carousel-box">
-    <carousel :list="imgList" :size="[800, 533]"></carousel>
+    <carousel :options="option" :list="imgList" @handleClick="viewDetail"></carousel>
   </div>
 </template>
 <script>
@@ -26,13 +26,25 @@ export default {
         {
           imageUrl: require('../../assets/images/5.jpg')
         }
-      ]
+      ],
+      option: {
+        direction: 'horizontal', // 切换方向：horizontal,vertical
+        slidesPerView: 1, // 显示在视区的个数
+        loop: true, // 是否循环播放
+        autoplay: true, // 是否自动播放
+        gapTime: 4000, // 间隔时间
+        progressBar: true// 是否显示进度条
+      }
     }
   },
   components: {
     carousel
   },
-  methods: {},
+  methods: {
+    viewDetail (item) {
+      console.log('查看详情', item)
+    }
+  },
   created () {
 
   }

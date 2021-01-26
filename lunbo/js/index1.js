@@ -56,7 +56,7 @@ function lunBo(imgWid,imgNum) {
             }
         }
     }
-    dotHover(imgWid,imgNum);
+    // dotHover(imgWid,imgNum);
     //点击时候正好对应这个点
     function tab(imgWid,imgNum) {
         var index = Math.abs(parseInt(imgList.style.left) / imgWid);
@@ -74,7 +74,7 @@ function lunBo(imgWid,imgNum) {
     function go() {
         timer = setInterval(function () {
             next.onclick(imgWid,imgNum);
-        }, 3000)
+        }, 4000)
     }
     go();
     //鼠标放上去清除定时器,鼠标移开再重新开始

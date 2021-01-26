@@ -1,15 +1,17 @@
 <template>
-  <div class="carousel-container">
+  <div class="carousel-container" ref="myCarousel">
     <!-- 图片列表 -->
-    <ul class="img-list" style="left:0;" :style="{width: imgListWidth}">
+    <ul class="img-list" style="left:0;top:0;" :style="{width: imgListWidth}">
       <li class="list-item left" v-for="(item, index) in list" :key="index" :style="{width: itemWidth + 'px'}">
         <img @click="handleClick(item)" class="img" :src="item.imageUrl" alt="">
       </li>
     </ul>
     <!-- 圆点列表 -->
-    <ul class="dot-list">
-      <li v-for="(item, index) in list" :key="index" :class="{'on': index===activeIdx}"></li>
+    <ul class="dot-list" v-if="options.pagination">
+      <li v-for="(item, index) in list" @mouseenter="enterDot($event, index)" :class="{'on':activeIdx===index}" :key="index"></li>
     </ul>
+    <!-- 进度条 -->
+    <div v-if="options.progressBar" class="bar" :style="{width: barWidth}"></div>
   </div>
 </template>
 <script>
@@ -24,9 +26,8 @@ export default {
           slidesPerView: 1, // 显示在视区的个数
           loop: true, // 是否循环播放
           autoplay: true, // 是否自动播放
-          gapTime: 3000, // 间隔时间
-          progressBar: false, // 是否显示进度条
-          size: [],
+          gapTime: 4000, // 间隔时间
+          progressBar: true, // 是否显示进度条
           pagination: false // 是否显示锚点
         }
       }
@@ -48,21 +49,22 @@ export default {
       imgList: null,
       imgNum: 0, // 轮播数量
       dotList: null,
-      dots: null
+      dots: null,
+      itemWidth: 0 // 单个轮播宽度
     }
   },
   computed: {
-    itemWidth () { // 单个轮播宽度
-      return this.size[0]
-    },
     imgListWidth () {
       // 图片总张数 * 单张图片宽度
       return this.list.length * this.itemWidth + 'px'
+    },
+    barWidth () {
+      return `${this.imgNum > 0 ? (this.activeIdx + 1) / this.imgNum * this.itemWidth : ''}px`
     }
   },
   methods: {
     handleClick (item) {
-
+      this.$emit('handleClick', item)
     },
     // 左移
     leftMove () {
@@ -81,63 +83,46 @@ export default {
         this.imgList.style.left = 0 + 'px'
       }
     },
-    dotHover () {
-      for (let i = 0; i < this.imgNum; i++) {
-        this.dots[i].onmouseover = function () {
-          console.log('houver', i)
-          for (let i = 0; i < this.imgNum; i++) {
-            if (this.dotList[i].className === 'on') {
-              this.dots[i].className = ''
-            }
-          }
-          this.className = 'on'
-          // 让点的index对应图片index
-          for (let i = 0; i < this.imgNum; i++) {
-            if (this.dots[i].className === 'on') {
-              this.imgList.style.left = -this.itemWidth * i + 'px'
-            }
-          }
-        }
-      }
+    enterDot (e, index) {
+      this.activeIdx = index
+      this.imgList.style.left = -this.itemWidth * index + 'px'
+      console.log('index', index)
     },
     // 点击的时候，正好对应这个点
     tabFun () {
       const index = Math.abs(parseInt(this.imgList.style.left) / this.itemWidth)
-      for (let i = 0; i < this.imgNum; i++) {
-        if (i !== index) {
-          if (this.dots[i].className === 'on') {
-            this.dots[i].className = ''
-          } else {
-            this.dots[i].className = 'on'
-          }
-        }
-      }
+      console.log('当前,index', index)
+      this.activeIdx = index
+      // for (let i = 0; i < this.imgNum; i++) {
+      //   if (i !== index) {
+      //     if (this.dots[i].className === 'on') {
+      //       this.dots[i].className = ''
+      //     }
+      //   } else {
+      //     this.dots[i].className = 'on'
+      //   }
+      // }
     },
     goFun () {
-      console.log('this.options.gapTime', this.options.gapTime)
       this.playFlag = setInterval(() => {
         this.rightMove()
         this.tabFun()
       }, this.options.gapTime)
     },
     init () {
+      this.itemWidth = this.$refs.myCarousel.clientWidth
       this.container = document.querySelectorAll('.carousel-container')[0]
       this.imgList = document.querySelectorAll('.img-list')[0]
-      console.log('imgList', this.imgList)
-      console.log('imgList.style', this.imgList)
-      this.dotList = document.querySelectorAll('.dot-list')[0]
-      this.dots = this.dotList.children
+      // this.dotList = document.querySelectorAll('.dot-list')[0]
       this.playFlag && clearInterval(this.playFlag)
       this.goFun()
-      this.dotHover() // 锚点事件
     }
   },
   created () {
-    console.log('options', this.options)
-    console.log('list', this.list)
     this.imgNum = this.list.length
   },
   mounted () {
+    console.log('this.options', this.options)
     this.init()
   },
   updated () {
@@ -173,7 +158,6 @@ li{
 }
 .img-list {
   position: relative;
-  // transition: all .3s ease-in-out;
 }
 .list-item {
   height: 100%;
@@ -204,5 +188,15 @@ li{
 /* dot选中时颜色 */
 .dot-list li.on{
   background-color: lightskyblue;
+}
+.bar {
+  width: 100%;
+  height: 2px;
+  background-color: #d7000f;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 10;
+  transition: all .3s ease-in-out;
 }
 </style>
