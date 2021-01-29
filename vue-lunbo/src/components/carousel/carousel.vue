@@ -2,7 +2,7 @@
   <div class="carousel-container" ref="myCarousel">
     <!-- 图片列表 -->
     <ul class="img-list" style="left:0;top:0;" :style="{width: imgListWidth}">
-      <li class="list-item left" v-for="(item, index) in list" :key="index" :style="{width: itemWidth + 'px'}">
+      <li class="list-item" :class="{'left': options.direction=='horizontal'}" v-for="(item, index) in list" :key="index" :style="{width: itemWidth + 'px', height: itemHeight + 'px'}">
         <img @click="handleClick(item)" class="img" :src="item.imageUrl" alt="">
       </li>
     </ul>
@@ -48,9 +48,11 @@ export default {
       // dom元素存储
       imgList: null,
       imgNum: 0, // 轮播数量
-      dotList: null,
       dots: null,
-      itemWidth: 0 // 单个轮播宽度
+      wrapWidth: 0, // 轮播视区宽
+      wrapHeight: 0, // 轮播视区高
+      itemWidth: 0, // 单个轮播宽度
+      itemHeight: 0 // 单个轮播高度
     }
   },
   computed: {
@@ -68,7 +70,6 @@ export default {
     },
     // 左移
     leftMove () {
-      if (!this.imgList) return
       this.imgList.style.left = parseInt(this.imgList.style.left) + this.itemWidth + 'px'
       // 判断一下点击到头的情况
       if (parseInt(this.imgList.style.left) > 0) {
@@ -83,6 +84,22 @@ export default {
         this.imgList.style.left = 0 + 'px'
       }
     },
+    // 上移
+    topMove () {
+      this.imgList.style.top = parseInt(this.imgList.style.top) + this.itemHeight + 'px'
+      // 判断一下点击到头的情况
+      if (parseInt(this.imgList.style.top) > 0) {
+        this.imgList.style.top = -(this.itemHeight * (this.imgNum - 1)) + 'px'
+      }
+    },
+    // 下移
+    bottomMove () {
+      this.imgList.style.top = parseInt(this.imgList.style.top) - this.itemHeight + 'px'
+      // 判断到头的情况
+      if (parseInt(this.imgList.style.top) < -(this.itemHeight * (this.imgNum - 1))) {
+        this.imgList.style.top = 0 + 'px'
+      }
+    },
     enterDot (e, index) {
       this.activeIdx = index
       this.imgList.style.left = -this.itemWidth * index + 'px'
@@ -90,37 +107,39 @@ export default {
     },
     // 点击的时候，正好对应这个点
     tabFun () {
-      const index = Math.abs(parseInt(this.imgList.style.left) / this.itemWidth)
+      const index = this.options.direction === 'horizontal' ? Math.abs(parseInt(this.imgList.style.left) / this.itemWidth) : Math.abs(parseInt(this.imgList.style.top) / this.itemHeight)
       console.log('当前,index', index)
       this.activeIdx = index
-      // for (let i = 0; i < this.imgNum; i++) {
-      //   if (i !== index) {
-      //     if (this.dots[i].className === 'on') {
-      //       this.dots[i].className = ''
-      //     }
-      //   } else {
-      //     this.dots[i].className = 'on'
-      //   }
-      // }
     },
     goFun () {
       this.playFlag = setInterval(() => {
-        this.rightMove()
+        if (this.options.direction === 'horizontal') {
+          this.rightMove()
+        } else {
+          this.bottomMove()
+        }
         this.tabFun()
       }, this.options.gapTime)
     },
     init () {
-      this.itemWidth = this.$refs.myCarousel.clientWidth
-      this.container = document.querySelectorAll('.carousel-container')[0]
+      this.imgNum = this.list.length // 轮播数量
+      this.wrapWidth = this.$refs.myCarousel.clientWidth
+      this.wrapHeight = this.$refs.myCarousel.clientHeight
+
+      if (this.options.direction === 'horizontal') { // 水平方向
+        this.itemWidth = this.wrapWidth / this.options.slidesPerView
+        this.itemHeight = this.wrapHeight
+      } else { // 垂直方向
+        this.itemHeight = this.wrapHeight / this.options.slidesPerView
+        this.itemWidth = this.wrapWidth
+      }
+
       this.imgList = document.querySelectorAll('.img-list')[0]
-      // this.dotList = document.querySelectorAll('.dot-list')[0]
       this.playFlag && clearInterval(this.playFlag)
       this.goFun()
     }
   },
-  created () {
-    this.imgNum = this.list.length
-  },
+  created () {},
   mounted () {
     console.log('this.options', this.options)
     this.init()
@@ -158,6 +177,7 @@ li{
 }
 .img-list {
   position: relative;
+  transition: all .3s ease-in-out;
 }
 .list-item {
   height: 100%;
