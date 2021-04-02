@@ -2,7 +2,8 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/carousel">Carousel</router-link>
+      <router-link to="/carousel">Carousel</router-link> |
+      <router-link to="/rule">Rule</router-link>
     </div>
     <router-view/>
   </div>

@@ -14,6 +14,7 @@ $(document).ready(function(){
     function autoPlay(){
         num++;
         if(num>5){
+            console.log('aa', num)
             num=0;
             $('.banner ul').css("left",'0').stop().animate({left:-800},500);
             // 播放到第二张时
@@ -21,12 +22,14 @@ $(document).ready(function(){
             // 导航点列定位到1
             $('.banner ol li').eq(1).addClass('current').siblings().removeClass('current');
         }else{
+            console.log('bb', num)
             $('.banner ul').stop().animate({left:-num*800},500);
             $('.banner ol li').eq(num).addClass('current').siblings().removeClass('current');
         }
         if(num==5){//播放到编号5，第6张图时，将其点设到第一个
             $('ol li').eq(0).addClass('current').siblings().removeClass('current');
         }
+        
     }
     // 向左自动播放函数
     function prevPlay(){

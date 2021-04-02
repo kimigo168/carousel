@@ -22,6 +22,11 @@ const routes = [
     path: '/carousel',
     name: 'carousel',
     component: () => import('../views/carouselPage/carouselPage')
+  },
+  {
+    path: '/rule',
+    name: 'rule',
+    component: () => import('../views/demo/rule')
   }
 ]
 
